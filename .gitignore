@@ -1,0 +1,18 @@
+# Secrets: the database password lives here and nowhere else.
+.streamlit/secrets.toml
+.env
+
+# Python and test leftovers.
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Operating system clutter.
+.DS_Store
+Thumbs.db
+
+# Database exports never belong in a public repository.
+*.dump
+*.sql.gz

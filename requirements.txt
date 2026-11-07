@@ -1,0 +1,19 @@
+# Exact versions, so the app on Streamlit Community Cloud runs the same code
+# as your laptop. Change a pin on purpose, in its own branch, with the full
+# test suite green before you merge.
+
+# The web app framework: pages, charts, filters, st.connection, caching.
+streamlit==1.66.1
+# Turns secrets.toml into a database connection pool (st.connection uses it).
+SQLAlchemy==2.1.6
+# The PostgreSQL driver. [binary] ships its own libpq, so nothing else to install.
+psycopg[binary]==3.3.6
+# Trusted certificate authorities for TLS. Without it, Community Cloud's
+# Linux image cannot verify the course server's certificate.
+certifi==2026.10.23
+# Query results arrive as DataFrames.
+pandas==3.1.0
+# Interactive charts.
+plotly==7.1.0
+# Runs the tests in tests/.
+pytest==9.1.1
