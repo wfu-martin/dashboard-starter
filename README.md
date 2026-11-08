@@ -12,7 +12,7 @@ test suite with a worked reconciliation test.
 
 On GitHub, **Use this template → Create a new repository**, or ask Claude Code:
 
-> *"Create a new repository called `<name>` from the template `foresightmetrix/dashboard-starter` and clone it here."*
+> *"Create a new repository called `<name>` from the template `wfu-martin/dashboard-starter` and clone it here."*
 
 ## Run it on your laptop
 
