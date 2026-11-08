@@ -6,6 +6,8 @@ Here the screen adds revenue up from invoice lines; the check adds up the
 invoice totals instead, a different table.
 
 Write one of these for every figure your dashboard shows, before you build it.
+In your project, start each test's name with the acceptance criterion it
+proves, for example `test_ac3_revenue_reconciles_to_invoices`.
 """
 
 from conftest import scalar

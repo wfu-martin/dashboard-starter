@@ -75,6 +75,13 @@ def test_read_state_on_the_template_is_all_not_done(tmp_path):
     assert (state.issues_closed, state.issues_total) == (0, 0)
 
 
+def test_template_roadmap_has_an_unfilled_review_section(tmp_path):
+    text = (ROOT / "ROADMAP.md").read_text(encoding="utf-8")
+    assert "## Dashboard review" in text
+    commit_on_main(tmp_path, {"ROADMAP.md": text})
+    assert progress.read_state(tmp_path, issues=[]).review is False
+
+
 def test_read_state_without_main_does_not_crash(tmp_path):
     state = progress.read_state(tmp_path, issues=[])
     assert flags(state) == (False,) * 5

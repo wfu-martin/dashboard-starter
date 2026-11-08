@@ -50,6 +50,7 @@ The connection tests run anywhere. The database tests skip until
 | `dashboard/metrics.py` | One function per figure on screen |
 | `dashboard/charts.py` | Headlines, number tiles, and charts in the house style |
 | `.streamlit/config.toml` | The app's colors and font |
+| `tools/progress.py` | The two-line progress tracker the skills show |
 | `tests/` | The tests; `test_example_reconciliation.py` is the worked example |
 | `spec.md` | What to build (written with `/dashkit:spec`) |
 | `design.md` | Each screen as drawn, and the style rules (screens drawn with `/dashkit:design`) |

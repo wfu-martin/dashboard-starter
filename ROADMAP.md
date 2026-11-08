@@ -15,3 +15,13 @@ acceptance criteria and the tests that prove it.
 ## Critical path
 
 <Which Issues block which; filled in from the spec.>
+
+---
+
+## Dashboard review
+
+When the dashboard is finished, the Pitch Lead runs the final review. Each fix
+becomes a GitHub Issue labeled `phase-1` through `phase-5`, for the phase it
+belongs to, and each review adds one line below.
+
+<Filled in by /dashkit:review-dashboard: one line per review, "- YYYY-MM-DD: fixes in #n, #n".>
