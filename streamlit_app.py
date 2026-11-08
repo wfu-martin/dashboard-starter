@@ -2,16 +2,16 @@
 
 This page is the template's starting point. It proves the connection works
 and shows one example chart on vinyl_vault. Replace it with the screens your
-spec describes; keep every query in dashboard/metrics.py.
+spec describes and design.md draws; keep every query in dashboard/metrics.py
+and draw every chart with dashboard/charts.py.
 
 Rule for a public app on a shared login: no box where a viewer can type SQL.
 Filters (dropdowns, sliders, dates) pass values to the queries as parameters.
 """
 
-import plotly.express as px
 import streamlit as st
 
-from dashboard import db, metrics
+from dashboard import charts, db, metrics
 
 st.set_page_config(page_title="Dashboard", layout="wide")
 
@@ -36,15 +36,11 @@ st.success(f"Connected to **{about.loc[0, 'display_name']}**: {about.loc[0, 'des
 if db.get_engine().url.database == "vinyl_vault":
     revenue = load_revenue_by_genre()
     top = revenue.iloc[0]
-    st.subheader(f"{top['genre']} earns the most: ${float(top['revenue']):,.2f}")
-    chart = px.bar(
-        revenue.head(10),
-        x="revenue",
-        y="genre",
-        orientation="h",
-        labels={"revenue": "Revenue ($)", "genre": ""},
+    share = float(top["revenue"]) / float(revenue["revenue"].sum())
+    charts.headline(
+        f"{top['genre']} earns {charts.fmt(share, 'percent')} of revenue",
+        "Revenue (unit price × quantity) by genre, all invoices. Top ten genres.",
     )
-    chart.update_layout(yaxis={"categoryorder": "total ascending"})
-    st.plotly_chart(chart, width="stretch")
+    charts.show(charts.ranked_bar(revenue, "genre", "revenue"))
 else:
     st.info("Your database is connected. Build the screens your spec describes here.")

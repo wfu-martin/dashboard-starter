@@ -48,8 +48,12 @@ The connection tests run anywhere. The database tests skip until
 | `streamlit_app.py` | The screens |
 | `dashboard/db.py` | Every connection setting, and why |
 | `dashboard/metrics.py` | One function per figure on screen |
+| `dashboard/charts.py` | Headlines, number tiles, and charts in the house style |
+| `.streamlit/config.toml` | The app's colors and font |
 | `tests/` | The tests; `test_example_reconciliation.py` is the worked example |
 | `spec.md` | What to build (written with `/dashkit:spec`) |
+| `design.md` | Each screen as drawn, and the style rules (screens drawn with `/dashkit:design`) |
+| `mockup.py` | The screens with made-up numbers, for sign-off before building (`streamlit run mockup.py`) |
 | `ROADMAP.md` | Phases and critical path (written with `/dashkit:roadmap`) |
 | `ROLES.md` | Who owns what |
 | `CLAUDE.md` | What Claude Code reads at the start of every session |

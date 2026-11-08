@@ -7,6 +7,7 @@
 | Stakeholder | <name and role, from the brief> |
 | Database | `<database name>` on the course server |
 | Spec | `spec.md` (the source of truth for what to build) |
+| Design | `design.md` (each screen as drawn, and the style rules) |
 | Plan | `ROADMAP.md` for phases; GitHub Issues for tasks |
 | Team | `ROLES.md` |
 
@@ -17,6 +18,7 @@
 - Streamlit app, entry point `streamlit_app.py`; run with `streamlit run streamlit_app.py`.
 - PostgreSQL through `st.connection`. Every connection setting lives in `dashboard/db.py`; keep it as it is (TLS with certifi, pool pre-ping and recycle, a pool of three).
 - Every query lives in `dashboard/metrics.py`: one function per figure on screen, taking the engine and returning a small DataFrame.
+- Every headline, number tile, and chart goes through `dashboard/charts.py`, which carries the style rules in `design.md`. Build each screen as `design.md` draws it.
 - Tests with pytest in `tests/`; run with `pytest`.
 
 ## How we work
