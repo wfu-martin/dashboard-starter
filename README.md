@@ -52,6 +52,7 @@ The connection tests run anywhere. The database tests skip until
 | `.streamlit/config.toml` | The app's colors and font |
 | `tools/progress.py` | The two-line progress tracker the skills show |
 | `tests/` | The tests; `test_example_reconciliation.py` is the worked example |
+| `briefs/vinyl-vault-email.md` | The practice request, for the `vinyl_vault` dashboard: `/dashkit:spec briefs/vinyl-vault-email.md` |
 | `spec.md` | What to build (written with `/dashkit:spec`) |
 | `design.md` | Each screen as drawn, and the style rules (screens drawn with `/dashkit:design`) |
 | `mockup.py` | The screens with made-up numbers, for sign-off before building (`streamlit run mockup.py`) |
