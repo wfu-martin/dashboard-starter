@@ -39,7 +39,8 @@ def commit_on_main(root: Path, files: dict[str, str]) -> None:
 
 
 def flags(state) -> tuple:
-    return (state.spec, state.design, state.roadmap, state.review, state.deploy)
+    return (state.spec, state.design, state.roadmap, state.review, state.deploy,
+            state.make_it_yours)
 
 
 def test_task_line_marks_done_current_and_later():
@@ -55,13 +56,14 @@ def test_planning_line_uses_the_skill_label():
 def test_project_line_mid_build():
     s = progress.RepoState(True, True, True, 4, 12, False, False)
     assert progress.project_line(s) == (
-        "PROJECT  ✓ Spec  ✓ Design  ✓ Roadmap  ▶ Build 4 of 12 tasks  ○ Review  ○ Deploy")
+        "PROJECT  ✓ Spec  ✓ Design  ✓ Roadmap  ▶ Build 4 of 12 tasks  ○ Deploy"
+        "  ○ Make it yours  ○ Review")
 
 
 def test_project_line_fresh_template():
     s = progress.RepoState(False, False, False, None, None, False, False)
     assert progress.project_line(s) == (
-        "PROJECT  ▶ Spec  ○ Design  ○ Roadmap  ○ Build  ○ Review  ○ Deploy")
+        "PROJECT  ▶ Spec  ○ Design  ○ Roadmap  ○ Build  ○ Deploy  ○ Make it yours  ○ Review")
 
 
 def test_unknown_skill_and_bad_step_are_rejected():
@@ -76,7 +78,7 @@ def test_read_state_on_the_template_is_all_not_done(tmp_path):
              for n in ("ROADMAP.md", "design.md", "README.md")}
     commit_on_main(tmp_path, files)
     state = progress.read_state(tmp_path, issues=[])
-    assert flags(state) == (False,) * 5
+    assert flags(state) == (False,) * 6
     assert (state.issues_closed, state.issues_total) == (0, 0)
 
 
@@ -89,7 +91,7 @@ def test_template_roadmap_has_an_unfilled_review_section(tmp_path):
 
 def test_read_state_without_main_does_not_crash(tmp_path):
     state = progress.read_state(tmp_path, issues=[])
-    assert flags(state) == (False,) * 5
+    assert flags(state) == (False,) * 6
 
 
 def test_read_state_counts_issues_and_deploy(tmp_path):
@@ -126,6 +128,37 @@ def test_read_state_recognizes_finished_documents(tmp_path):
     assert (state.spec, state.design, state.roadmap, state.review) == (True,) * 4
 
 
+NOTE = "## Make it yours\n\nWe turned it into a transit map.\n"
+
+
+def test_make_it_yours_done_when_note_on_main_and_phase_6_closed(tmp_path):
+    commit_on_main(tmp_path, {"design.md": NOTE})
+    issues = [{"state": "CLOSED", "labels": [{"name": "phase-6"}]}]
+    assert progress.read_state(tmp_path, issues=issues).make_it_yours is True
+
+
+def test_make_it_yours_waits_for_open_phase_6_or_none(tmp_path):
+    commit_on_main(tmp_path, {"design.md": NOTE})
+    assert progress.read_state(tmp_path, issues=[
+        {"state": "OPEN", "labels": [{"name": "phase-6"}]}]).make_it_yours is False
+    assert progress.read_state(tmp_path, issues=[]).make_it_yours is False
+
+
+def test_make_it_yours_placeholder_note_is_not_done(tmp_path):
+    commit_on_main(tmp_path, {"design.md":
+        f"## Make it yours\n\n{progress.MAKE_IT_YOURS_PLACEHOLDER}\n"})
+    issues = [{"state": "CLOSED", "labels": [{"name": "phase-6"}]}]
+    assert progress.read_state(tmp_path, issues=issues).make_it_yours is False
+
+
+def test_build_does_not_count_phase_6(tmp_path):
+    commit_on_main(tmp_path, {"README.md": "x\n"})
+    issues = [{"state": "CLOSED", "labels": [{"name": "phase-1"}]},
+              {"state": "OPEN", "labels": [{"name": "phase-6"}]}]
+    state = progress.read_state(tmp_path, issues=issues)
+    assert (state.issues_closed, state.issues_total, state.build) == (1, 1, True)
+
+
 def test_unreadable_issues_give_unknown_counts(tmp_path, monkeypatch):
     def boom(*args, **kwargs):
         raise OSError("no gh")
@@ -144,3 +177,18 @@ def test_cli_prints_on_a_cp1252_pipe(monkeypatch):
     text = out.buffer.getvalue().decode("utf-8")
     assert text.splitlines()[0].startswith("PROJECT  ▶ Spec")
     assert text.splitlines()[1].startswith("SPEC  ▶ Stakeholder")
+
+
+def test_template_design_has_an_unfilled_make_it_yours_section():
+    text = (TEMPLATE / "design.md").read_text(encoding="utf-8")
+    assert f"## Make it yours\n\n{progress.MAKE_IT_YOURS_PLACEHOLDER}" in text
+    roadmap = (TEMPLATE / "ROADMAP.md").read_text(encoding="utf-8")
+    assert ("| 6. Make it yours | The team makes the dashboard its own; "
+            "every test still passes. | |") in roadmap
+    assert "`phase-1` through `phase-6`" in roadmap
+
+
+def test_template_make_it_yours_note_is_not_done_even_with_issue_closed(tmp_path):
+    commit_on_main(tmp_path, {"design.md": (TEMPLATE / "design.md").read_text(encoding="utf-8")})
+    issues = [{"state": "CLOSED", "labels": [{"name": "phase-6"}]}]
+    assert progress.read_state(tmp_path, issues=issues).make_it_yours is False

@@ -1,5 +1,6 @@
 # The dashboard's theme. primaryColor matches ACCENT in dashboard/charts.py;
-# change the two together, and the rule in design.md with them.
+# change the two together, and the rule in design.md with them. The look
+# is the team's to change in Make it yours.
 [theme]
 base = "light"
 primaryColor = "#1F5FA8"

@@ -11,6 +11,7 @@ acceptance criteria and the tests that prove it.
 | 3. Views | Each stakeholder question has a screen section that answers it, built as `design.md` draws it | |
 | 4. Filters | The interactions the spec lists work, and the numbers still reconcile | |
 | 5. Polish and deploy | The app follows every rule in `design.md`; `mockup.py` is gone; the live app link is in the README | |
+| 6. Make it yours | The team makes the dashboard its own; every test still passes. | |
 
 ## Critical path
 
@@ -21,7 +22,7 @@ acceptance criteria and the tests that prove it.
 ## Dashboard review
 
 When the dashboard is finished, a Pitch Lead (or the Pitch Lead side-quest holder) runs the final review. Each fix
-becomes a GitHub Issue labeled `phase-1` through `phase-5`, for the phase it
+becomes a GitHub Issue labeled `phase-1` through `phase-6`, for the phase it
 belongs to, and each review adds one line below.
 
 <Filled in by /dashkit:review-dashboard: one line per review, "- YYYY-MM-DD: fixes in #n, #n".>

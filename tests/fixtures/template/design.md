@@ -4,7 +4,9 @@ How the dashboard looks: each screen as drawn, and the style rules every
 chart follows. `/dashkit:design` draws the screens from `spec.md` and builds
 `mockup.py`; `/dashkit:review-dashboard` checks the finished app against this
 file. The rules live in code in `dashboard/charts.py` and
-`.streamlit/config.toml`; change a rule here and there together.
+`.streamlit/config.toml`; change a rule here and there together. Once the
+dashboard is finished, the team makes the look its own in Make it yours
+(`/dashkit:make-it-yours`).
 
 ---
 
@@ -15,7 +17,17 @@ answers and the chart chosen for it. Drawn with `/dashkit:design`.>
 
 ---
 
+## Make it yours
+
+<What your team made its own, and why, in a few sentences, in your own words. Written at the end of /dashkit:make-it-yours.>
+
+---
+
 ## Style rules
+
+These are the house style. Until Make it yours, change a rule only for a
+reason the stakeholder gives; in Make it yours the look is the team's to
+change, with this file updated in the same commit.
 
 ### Page
 

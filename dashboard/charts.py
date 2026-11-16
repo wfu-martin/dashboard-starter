@@ -5,6 +5,8 @@ code. Views call these helpers instead of drawing charts directly, so a view
 built by any teammate, in any session, looks like the rest of the dashboard.
 To change the look, change the rule in design.md and the matching line here
 (and the theme in .streamlit/config.toml), never one view at a time.
+In Make it yours the look is the team's to change: change it here and in
+design.md in the same commit.
 
 Number kinds: "money" ($1,234, or $5.65 under $10), "count" (1,234),
 "percent" (12.3%, from a fraction such as 0.123).

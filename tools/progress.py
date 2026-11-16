@@ -3,7 +3,7 @@
 
 Every dashkit skill runs this at each step. It prints:
 
-    PROJECT  ✓ Spec  ✓ Design  ✓ Roadmap  ▶ Build 4 of 12 tasks  ○ Review  ○ Deploy
+    PROJECT  ✓ Spec  ✓ Design  ✓ Roadmap  ▶ Build 4 of 12 tasks  ○ Deploy  ○ Make it yours  ○ Review
     TASK #7  ✓ Pick up  ✓ Build  ▶ Tidy  ○ Full suite  ...
 
 The first line is the whole project: ✓ means a stage is done, ▶ is the first
@@ -12,13 +12,17 @@ skill you are running, with the same marks for its own steps.
 
 Where the first line comes from:
 
-- Spec, Design, Roadmap, and Review are read from the files on the `main`
-  branch (`git show main:<file>`), not from your working folder. A stage
+- Spec, Design, Roadmap, Review, and the Make it yours note are read from
+  the files on the `main` branch (`git show main:<file>`), not from your working folder. A stage
   counts only once its pull request is merged, so a half-finished draft on
   a branch never shows as done, and everyone on the team sees the same line.
-- Build and Deploy come from GitHub Issues, read with the `gh` command. If
-  `gh` is missing or not signed in, the task count is left out and Build
-  shows as not done; the script never stops with an error over it.
+- Build, Deploy, and Make it yours come from GitHub Issues, read with the
+  `gh` command. Build counts every Issue except the one labeled `phase-6`
+  (Make it yours, the open step after the dashboard is finished). Make it
+  yours is done when its `phase-6` Issue is closed and `## Make it yours` in
+  `design.md` says what the team made its own. If `gh` is missing or not
+  signed in, the task count is left out and Build shows as not done; the
+  script never stops with an error over it.
 
 Run it by hand any time:
 
@@ -69,6 +73,12 @@ SPEC_HEADINGS = [
     "## Out of scope",
 ]
 
+# The template's text under "## Make it yours" in design.md, before the team
+# writes its own. A note still holding this line is not done.
+MAKE_IT_YOURS_PLACEHOLDER = (
+    "<What your team made its own, and why, in a few sentences, in your own "
+    "words. Written at the end of /dashkit:make-it-yours.>")
+
 DONE, CURRENT, LATER = "✓", "▶", "○"
 
 
@@ -81,6 +91,7 @@ class RepoState:
     issues_total: int | None
     review: bool
     deploy: bool
+    make_it_yours: bool = False
 
     @property
     def build(self) -> bool:
@@ -122,6 +133,12 @@ def _has_label(issue: dict, label: str) -> bool:
     return any(item.get("name") == label for item in issue.get("labels", []))
 
 
+def _all_closed(issues: list[dict], label: str) -> bool:
+    """True when at least one Issue has `label` and every one of them is closed."""
+    labeled = [i for i in issues if _has_label(i, label)]
+    return bool(labeled) and all(i.get("state") == "CLOSED" for i in labeled)
+
+
 def read_state(root: Path, issues: list[dict] | None = None) -> RepoState:
     """Read the project's stages from `main` and from GitHub Issues."""
     if issues is None:
@@ -130,7 +147,8 @@ def read_state(root: Path, issues: list[dict] | None = None) -> RepoState:
     spec_text = _on_main(root, "spec.md")
     spec = all(re.search(rf"^{re.escape(h)}[ \t]*$", spec_text, re.M) for h in SPEC_HEADINGS)
 
-    screens = _section(_on_main(root, "design.md"), "## Screens")
+    design_text = _on_main(root, "design.md")
+    screens = _section(design_text, "## Screens")
     design = "```" in screens and "<One text wireframe" not in screens
 
     roadmap_text = _on_main(root, "ROADMAP.md")
@@ -139,18 +157,22 @@ def read_state(root: Path, issues: list[dict] | None = None) -> RepoState:
     review = bool(re.search(r"^- \d{4}-\d{2}-\d{2}",
                             _section(roadmap_text, "## Dashboard review"), re.M))
 
+    note = _section(design_text, "## Make it yours").strip()
+    note = note.removesuffix("---").strip()
+    has_note = bool(note) and MAKE_IT_YOURS_PLACEHOLDER not in note
+
     if issues is None:
         closed = total = None
-        deploy = False
+        deploy = make_it_yours = False
     else:
-        total = len(issues)
-        closed = sum(1 for i in issues if i.get("state") == "CLOSED")
-        phase5 = [i for i in issues if _has_label(i, "phase-5")]
+        build_issues = [i for i in issues if not _has_label(i, "phase-6")]
+        total = len(build_issues)
+        closed = sum(1 for i in build_issues if i.get("state") == "CLOSED")
         deploy = ("**Live app:** http" in _on_main(root, "README.md")
-                  and bool(phase5)
-                  and all(i.get("state") == "CLOSED" for i in phase5))
+                  and _all_closed(issues, "phase-5"))
+        make_it_yours = has_note and _all_closed(issues, "phase-6")
 
-    return RepoState(spec, design, roadmap, closed, total, review, deploy)
+    return RepoState(spec, design, roadmap, closed, total, review, deploy, make_it_yours)
 
 
 def _marks(done: list[bool]) -> list[str]:
@@ -171,7 +193,8 @@ def project_line(state: RepoState) -> str:
     if state.issues_total:
         build = f"Build {state.issues_closed} of {state.issues_total} tasks"
     stages = [("Spec", state.spec), ("Design", state.design), ("Roadmap", state.roadmap),
-              (build, state.build), ("Review", state.review), ("Deploy", state.deploy)]
+              (build, state.build), ("Deploy", state.deploy),
+              ("Make it yours", state.make_it_yours), ("Review", state.review)]
     marks = _marks([done for _, done in stages])
     return "PROJECT  " + "  ".join(f"{m} {name}" for m, (name, _) in zip(marks, stages))
 

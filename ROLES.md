@@ -7,10 +7,14 @@ skills read this file, so keep the names current.
 | Role | Owns | Runs | Build tasks lean toward |
 |---|---|---|---|
 | Spec Lead | Writes the stakeholder brief; the framed questions, `spec.md` and its acceptance criteria; approves any spec change during the build | `/dashkit:spec` | Data layer, filters |
-| Design Lead | Chart choice, layout, labels, the takeaway on every screen; `design.md` | `/dashkit:design` | Views, polish |
+| Design Lead | Chart choice, layout, labels, the takeaway on every screen; `design.md`; the dashboard's identity; leads Make it yours | `/dashkit:design`, `/dashkit:make-it-yours` | Views, polish, Make it yours |
 | Delivery Lead | The repository and collaborators, the roadmap and task assignments, reassignments, the final deploy | `/dashkit:roadmap` | Filters, final deploy |
 | Data Lead | The database connection, the data layer, the reconciliation tests; keeping the full suite green | Phase 1: the connection and the early hello-world deploy | Data layer |
 | Pitch Lead | The stakeholder's point of view at the end: the final review and the Demo Day pitch | `/dashkit:review-dashboard` | Views |
+
+Make it yours, the open step after the dashboard is finished, is led by a
+Design Lead (or the Design Lead side-quest holder), and the whole team is
+welcome in the session.
 
 The role that owns a planning skill runs it, the team reads the pull request,
 and that person merges it. Task skills are run by the Issue's assignee, who

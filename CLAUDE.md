@@ -30,6 +30,7 @@
 - Spec first. If the spec must change, get the OK of a Spec Lead (or the Spec Lead side-quest holder), named in `ROLES.md`, before any test or code changes, and say who approved it in the pull request.
 - Tests written by `/dashkit:tests-first` stay as written during the build unless the student approves a change.
 - State lives in files and Issues, so a fresh session can pick up any task.
+- Make it yours (`/dashkit:make-it-yours`) is the exception to the rules above: an open session with no steps and no gates, on one `make-it-yours` branch, where the team tries ideas freely and needs no spec change. Two rules still hold there: every new number on screen gets a reconciliation test, and the full suite passes before anything merges.
 
 ## Rules for a public app on a shared login
 
