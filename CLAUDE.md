@@ -27,7 +27,7 @@
 - Tests come first. For each figure, write a reconciliation test (the figure equals an independent SQL answer) and an acceptance test for each spec requirement the Issue covers, and see them fail before building.
 - The full suite passes before every pull request. A pull request says `Closes #<issue>`.
 - The dashkit skills run in gated steps and show a two-line progress tracker at each gate; read it, and answer the gate before going on.
-- Spec first. If the spec must change, get the Spec Lead's OK (named in `ROLES.md`) before any test or code changes, and say who approved it in the pull request.
+- Spec first. If the spec must change, get the OK of a Spec Lead (or the Spec Lead side-quest holder), named in `ROLES.md`, before any test or code changes, and say who approved it in the pull request.
 - Tests written by `/dashkit:tests-first` stay as written during the build unless the student approves a change.
 - State lives in files and Issues, so a fresh session can pick up any task.
 

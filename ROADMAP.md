@@ -20,7 +20,7 @@ acceptance criteria and the tests that prove it.
 
 ## Dashboard review
 
-When the dashboard is finished, the Pitch Lead runs the final review. Each fix
+When the dashboard is finished, a Pitch Lead (or the Pitch Lead side-quest holder) runs the final review. Each fix
 becomes a GitHub Issue labeled `phase-1` through `phase-5`, for the phase it
 belongs to, and each review adds one line below.
 
